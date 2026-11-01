@@ -1,0 +1,177 @@
+substitutions:
+  name: "faikout-indoor"
+  friendly_name: "Faikout Indoor"
+
+esphome:
+  name: "${name}"
+  friendly_name: "${friendly_name}"
+  project:
+    name: cedarcreek.faikout
+    version: "1.0.0"
+
+esp32:
+  variant: esp32s3
+  framework:
+    type: esp-idf
+
+logger:
+  baud_rate: 0
+
+api:
+
+ota:
+  platform: esphome
+
+dashboard_import:
+  package_import_url: github://mckay27/esphome-templates/faikout.yaml@master
+  import_full_config: true
+
+wifi:
+  ap:
+    password: "esphome"
+
+captive_portal:
+
+improv_ble:
+  authorizer: none
+
+external_components:
+  - source: github://asund/esphome-daikin-s21@main
+    components: [daikin_s21]
+
+uart:
+  tx_pin:
+    number: GPIO48
+    inverted: true
+  rx_pin:
+    number: GPIO34
+    inverted: true
+    mode:
+      input: true
+  baud_rate: 2400
+  data_bits: 8
+  parity: EVEN
+  stop_bits: 2
+
+daikin_s21:
+
+climate:
+  - name: "${friendly_name}"
+    platform: daikin_s21
+    sensor: daikin_temperature
+    humidity_sensor: daikin_humidity
+
+select:
+  - platform: daikin_s21
+    brightness:
+      name: LED Brightness
+    humidity:
+      name: Humidity
+    vertical_swing:
+      name: Vertical Swing
+
+sensor:
+  - platform: daikin_s21
+    inside_temperature:
+      id: daikin_temperature
+      name: Inside Temperature
+      filters:
+        - delta: 0.0
+    fan_speed:
+      name: Fan Speed
+      filters:
+        - delta: 0.0
+    swing_vertical_angle:
+      name: Swing Vertical Angle
+      filters:
+        - delta: 0.0
+    humidity:
+      id: daikin_humidity
+      name: Humidity
+      filters:
+        - delta: 0.0
+    demand:
+      name: Demand
+      filters:
+        - multiply: !lambda return 100.0F / 15.0F;
+        - delta: 0.0
+    ir_counter:
+      name: IR Counter
+      filters:
+        - delta: 0.0
+    power:
+      name: Unit Power
+      filters:
+        - delta: 0.0
+    energy_cooling:
+      name: Energy Consumption Cooling
+      filters:
+        - delta: 0.0
+    energy_heating:
+      name: Energy Consumption Heating
+      filters:
+        - delta: 0.0
+  - platform: homeassistant
+    id: room_temp
+    entity_id: sensor.office_temperature
+    unit_of_measurement: °F
+    accuracy_decimals: 1
+  - platform: homeassistant
+    id: room_humidity
+    entity_id: sensor.office_humidity
+    unit_of_measurement: "%"
+    accuracy_decimals: 1
+
+switch:
+  - platform: daikin_s21
+    powerful:
+      name: Powerful Mode Switch
+    comfort:
+      name: Comfort Mode Switch
+    quiet:
+      name: Quiet Mode Switch
+    streamer:
+      name: Streamer Mode Switch
+    led:
+      name: Sensor LED Switch
+    motion:
+      name: Sensor Mode Switch
+    econo:
+      name: Econo Mode Switch
+
+binary_sensor:
+  - platform: daikin_s21
+    powerful:
+      name: Powerful Mode Sensor
+    comfort:
+      name: Comfort Mode Sensor
+    quiet:
+      name: Quiet Mode Sensor
+    streamer:
+      name: Streamer Mode Sensor
+    led:
+      name: Sensor LED Sensor
+    motion:
+      name: Sensor Mode Sensor
+    econo:
+      name: Econo Mode Sensor
+    defrost:
+      name: Defrost
+    multizone_online:
+      name: Multizone Online
+    online:
+      name: Online
+
+text_sensor:
+  - platform: daikin_s21
+    model:
+      name: Model
+    software_revision:
+      name: Software Revision
+    software_version:
+      name: Software Version
+
+number:
+  - platform: daikin_s21
+    demand:
+      name: Demand
