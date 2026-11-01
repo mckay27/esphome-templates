@@ -5,6 +5,7 @@ substitutions:
 esphome:
   name: "${name}"
   friendly_name: "${friendly_name}"
+  name_add_mac_suffix: true
   project:
     name: cedarcreek.faikout
     version: "1.0.0"
@@ -26,12 +27,12 @@ ota:
   platform: esphome
 
 dashboard_import:
-  package_import_url: github://mckay27/esphome-templates/faikout.yaml@master
+  package_import_url: github://mckay27/esphome-templates/faikout-outdoor.yaml@master
   import_full_config: true
 
 wifi:
   ap:
-    password: "esphome"
+    password: "cedarcreek"
 
 captive_portal:
 
