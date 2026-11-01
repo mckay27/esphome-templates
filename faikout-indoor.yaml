@@ -40,6 +40,14 @@ external_components:
   - source: github://asund/esphome-daikin-s21@main
     components: [daikin_s21]
 
+light:
+  - platform: esp32_rmt_led_strip
+    channel_colors: GRB
+    pin: GPIO47
+    num_leds: 1
+    chipset: WS2812
+    name: "Status LED"
+
 uart:
   tx_pin:
     number: GPIO48
